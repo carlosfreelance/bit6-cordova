@@ -12,11 +12,10 @@ import com.bit6.sdk.Bit6;
  * Bit6 Cordova plugin
  */
 public class Bit6App extends Application {
-   
+
 	@Override
     public void onCreate()
     {
         super.onCreate();
-        Bit6.getInstance().init(getApplicationContext(), "", this, "");
     }
 }

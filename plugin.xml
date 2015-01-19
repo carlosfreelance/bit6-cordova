@@ -46,7 +46,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
   	<platform name="android">
 
-    <js-module name="Bit6" src="www/ios/Bit6.js">
+    <js-module name="Bit6" src="www/android/Bit6.js">
       <clobbers target="bit6"/>
     </js-module>
 
@@ -65,6 +65,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 				<uses-permission android:name="android.permission.GET_ACCOUNTS" />
         <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
         <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+        <uses-permission android:name="android.permission.INTERNET" />
         <permission
             android:name="com.bit6.permission.C2D_MESSAGE"
              android:protectionLevel="signature" />

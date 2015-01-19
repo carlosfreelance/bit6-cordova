@@ -2,11 +2,15 @@ var cordova = require('cordova');
 var exec = require('cordova/exec');
 
 function Bit6(){
-
+    this.init();
 }
 
 Bit6.prototype.register = function(gcmSenderId){
   exec(bit6._notification, bit6._error, "Bit6", "register", [gcmSenderId]);
+}
+
+Bit6.prototype.init = function(){
+  exec("", "", "Bit6", "init", []);
 }
 
 Bit6.prototype.startListening = function(){
