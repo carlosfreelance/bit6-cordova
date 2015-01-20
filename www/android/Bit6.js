@@ -13,6 +13,10 @@ Bit6.prototype.init = function(){
   exec("", "", "Bit6", "init", []);
 }
 
+Bit6.prototype.conversations = function(success, error){
+  exec(success, error, "Bit6", "conversations", []);
+}
+
 Bit6.prototype.startListening = function(){
     exec(bit6._notification, bit6._error, "Bit6", "startListening", []);
 }

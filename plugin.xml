@@ -66,6 +66,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
         <uses-permission android:name="android.permission.USE_CREDENTIALS" />
         <uses-permission android:name="android.permission.INTERNET" />
+
         <permission
             android:name="com.bit6.permission.C2D_MESSAGE"
              android:protectionLevel="signature" />
@@ -84,7 +85,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
         <provider
             android:name="com.bit6.sdk.Bit6ContentProvider"
-            android:authorities="com.bit6.sdk"
+            android:authorities="com.bit6.ChatDemo"
             android:exported="false" />
 
         <receiver

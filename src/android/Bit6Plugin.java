@@ -10,13 +10,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.ResultCallback;
-import android.widget.Toast;
-import java.lang.Throwable;
+import com.bit6.sdk.Message;
+import com.bit6.sdk.Message.Messages;
+
+import android.database.Cursor;
 
 
 /**
@@ -25,17 +26,24 @@ import java.lang.Throwable;
 public class Bit6Plugin extends CordovaPlugin {
 
   static final String INIT = "init";
+  static final String LOGIN = "login";
+  static final String CONVERSATIONS = "conversations";
+
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
-    if (action.equals("init")) {
+    if (action.equals(INIT)) {
       init();
       callbackContext.success();
       return true;
     }
-    if (action.equals("login")) {
+    if (action.equals(LOGIN)) {
      login(args.getString(0), args.getString(1), callbackContext);
+     return true;
+   }
+   if (action.equals(CONVERSATIONS)) {
+     conversations(callbackContext);
      return true;
    }
 
@@ -57,6 +65,30 @@ public class Bit6Plugin extends CordovaPlugin {
       }
     }
   });
+}
+
+void conversations(final CallbackContext callbackContext) throws JSONException{
+
+ JSONArray conversations = new JSONArray();
+ Cursor cursor;
+ cursor = Bit6.getInstance().getConversations();
+
+ while (cursor.moveToNext()) {
+   JSONObject item = new JSONObject();
+
+   String userName = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
+   String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
+   String stamp = cursor.getString(cursor.getColumnIndex(Messages.CREATED));
+
+   item.put("title", userName);
+   item.put("content", content);
+   item.put("stamp", stamp);
+   conversations.put(item);
+ }
+ JSONObject data = new JSONObject();
+ data.put("conversations", conversations);
+
+ callbackContext.success(data);
 }
 
 void init() {
