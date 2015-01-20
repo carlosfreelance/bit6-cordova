@@ -38,7 +38,7 @@ Bit6.prototype.logout = function(success, error){
 }
 
 Bit6.prototype.isConnected = function(success, error){
-  exec(success, error, "Bit6", "isConnected", null);
+  exec(success, error, "Bit6", "isConnected", []);
 }
 
 Bit6.prototype.sendTextMessage = function(message, to, success, error){

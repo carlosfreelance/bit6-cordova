@@ -28,6 +28,7 @@ public class Bit6Plugin extends CordovaPlugin {
   static final String INIT = "init";
   static final String LOGIN = "login";
   static final String CONVERSATIONS = "conversations";
+  static final String IS_CONNECTED = "isConnected";
 
 
   @Override
@@ -44,6 +45,10 @@ public class Bit6Plugin extends CordovaPlugin {
    }
    if (action.equals(CONVERSATIONS)) {
      conversations(callbackContext);
+     return true;
+   }
+   if (action.equals(IS_CONNECTED)) {
+     isConnected(callbackContext);
      return true;
    }
 
@@ -67,28 +72,43 @@ public class Bit6Plugin extends CordovaPlugin {
   });
 }
 
-void conversations(final CallbackContext callbackContext) throws JSONException{
+void conversations(final CallbackContext callbackContext){
+  try {
+   JSONArray conversations = new JSONArray();
+   Cursor cursor;
+   cursor = Bit6.getInstance().getConversations();
 
- JSONArray conversations = new JSONArray();
- Cursor cursor;
- cursor = Bit6.getInstance().getConversations();
+   while (cursor.moveToNext()) {
+     JSONObject item = new JSONObject();
+     String userName = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
+     String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
+     String stamp = cursor.getString(cursor.getColumnIndex(Messages.CREATED));
 
- while (cursor.moveToNext()) {
-   JSONObject item = new JSONObject();
+     item.put("title", userName);
+     item.put("content", content);
+     item.put("stamp", stamp);
+     conversations.put(item);
+   }
+   JSONObject data = new JSONObject();
+   data.put("conversations", conversations);
 
-   String userName = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
-   String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
-   String stamp = cursor.getString(cursor.getColumnIndex(Messages.CREATED));
-
-   item.put("title", userName);
-   item.put("content", content);
-   item.put("stamp", stamp);
-   conversations.put(item);
+   callbackContext.success(data);
  }
- JSONObject data = new JSONObject();
- data.put("conversations", conversations);
+ catch (JSONException e) {
+  callbackContext.error("Error: " + e.getMessage());
+ }
+}
 
- callbackContext.success(data);
+
+void isConnected(final CallbackContext callbackContext) {
+  try {
+    JSONObject response = new JSONObject();
+    response.put("connected", Bit6.getInstance().isUserLoggedIn());
+    callbackContext.success(response);
+  }
+  catch (JSONException e) {
+    callbackContext.error("Error: " + e.getMessage());
+  }
 }
 
 void init() {
