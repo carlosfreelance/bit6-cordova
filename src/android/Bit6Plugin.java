@@ -28,7 +28,9 @@ public class Bit6Plugin extends CordovaPlugin {
   static final String INIT = "init";
   static final String LOGIN = "login";
   static final String CONVERSATIONS = "conversations";
+  static final String CONVERSATION = "getConversation";
   static final String IS_CONNECTED = "isConnected";
+
 
 
   @Override
@@ -44,7 +46,11 @@ public class Bit6Plugin extends CordovaPlugin {
      return true;
    }
    if (action.equals(CONVERSATIONS)) {
-     conversations(callbackContext);
+     getConversations(callbackContext);
+     return true;
+   }
+   if (action.equals(CONVERSATION)) {
+     getConversation(args.getString(0), callbackContext);
      return true;
    }
    if (action.equals(IS_CONNECTED)) {
@@ -71,6 +77,57 @@ public class Bit6Plugin extends CordovaPlugin {
     }
   });
 }
+void getConversation(String other, final CallbackContext callbackContext){
+  JSONArray messages = new JSONArray();
+  Address address = Address.parse(other);
+  Cursor cursor;
+
+  cursor = Bit6.getInstance().getConversation(address);
+  try {
+   while (cursor.moveToNext()) {
+     JSONObject item = new JSONObject();
+     String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
+     int flags = cursor.getInt(cursor.getColumnIndex(Messages.FLAGS));
+
+     item.put("content", content);
+     item.put("incoming", Message.isIncoming(flags));
+     item.put("other", other.substring(other.indexOf(':') + 1)); //get name
+     messages.put(item);
+   }
+   JSONObject data = new JSONObject();
+   data.put("messages", messages);
+   callbackContext.success(data);
+ }
+ catch (Exception e) {
+  callbackContext.error("Error: " + e.getMessage());
+}
+}
+
+void getConversations(final CallbackContext callbackContext){
+  JSONArray conversations = new JSONArray();
+  Cursor cursor;
+  cursor = Bit6.getInstance().getConversations();
+  try {
+   while (cursor.moveToNext()) {
+     JSONObject item = new JSONObject();
+     String userName = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
+     String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
+     String stamp = cursor.getString(cursor.getColumnIndex(Messages.CREATED));
+
+     item.put("title", userName);
+     item.put("content", content);
+     item.put("stamp", stamp);
+     conversations.put(item);
+   }
+   JSONObject data = new JSONObject();
+   data.put("conversations", conversations);
+
+   callbackContext.success(data);
+ }
+ catch (JSONException e) {
+  callbackContext.error("Error: " + e.getMessage());
+}
+}
 
 void conversations(final CallbackContext callbackContext){
   try {
@@ -96,7 +153,7 @@ void conversations(final CallbackContext callbackContext){
  }
  catch (JSONException e) {
   callbackContext.error("Error: " + e.getMessage());
- }
+}
 }
 
 
