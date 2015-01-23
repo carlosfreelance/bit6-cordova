@@ -46,6 +46,9 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
   	<platform name="android">
 
+    <hook type="after_plugin_install" src="scripts/afterinstall.js" />
+
+
     <js-module name="Bit6" src="www/android/Bit6.js">
       <clobbers target="bit6"/>
     </js-module>
@@ -82,11 +85,16 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 		</config-file>
 
 		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-
+    <activity android:name="com.bit6.sdk.ui.InCallActivity"
+               android:label="@string/app_name"
+               android:configChanges="orientation|screenSize"
+               android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+       </activity>
         <provider
             android:name="com.bit6.sdk.Bit6ContentProvider"
             android:authorities="com.bit6.ChatDemo"
             android:exported="false" />
+       <meta-data android:name="com.google.android.gms.version" android:value="6171000" />
 
         <receiver
             android:name="com.bit6.sdk.gcm.GcmBroadcastReceiver"
@@ -102,12 +110,13 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
   	</config-file>
 
-      <source-file src="lib/android/armeabi-v7a/libjingle_peerconnection_so.so" target-dir="libs/armeabi-v7a"/>
+    <!--  <source-file src="lib/android/armeabi-v7a/libjingle_peerconnection_so.so" target-dir="libs/armeabi-v7a"/>
 
       <source-file src="lib/android/android-support-v4.jar" target-dir="libs"/>
       <source-file src="lib/android/bit6-sdk.jar" target-dir="libs"/>
       <source-file src="lib/android/google-play-services.jar" target-dir="libs"/>
       <source-file src="lib/android/libjingle_peerconnection.jar" target-dir="libs"/>
+    -->
 
        <source-file src="src/android/Bit6Plugin.java" target-dir="src/com/bit6/sdk"/>
        <source-file src="src/android/Bit6App.java" target-dir="src/com/bit6/sdk"/>

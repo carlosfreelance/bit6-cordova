@@ -17,6 +17,11 @@ Bit6.prototype.conversations = function(success, error){
   exec(success, error, "Bit6", "conversations", []);
 }
 
+Bit6.prototype.startCall = function(to, opts, success, error){
+  exec(success, error, "Bit6", "startCallToAddress", [to, opts.video]);
+}
+
+
 Bit6.prototype.getConversationByUri = function(uri, success, error){
   exec(success, error, "Bit6", "getConversation", [uri]);
 }

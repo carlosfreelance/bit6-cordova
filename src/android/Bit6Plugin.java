@@ -16,6 +16,7 @@ import com.bit6.sdk.Bit6;
 import com.bit6.sdk.ResultCallback;
 import com.bit6.sdk.Message;
 import com.bit6.sdk.Message.Messages;
+import com.bit6.sdk.RtcDialog;
 
 import android.database.Cursor;
 
@@ -30,6 +31,7 @@ public class Bit6Plugin extends CordovaPlugin {
   static final String CONVERSATIONS = "conversations";
   static final String CONVERSATION = "getConversation";
   static final String IS_CONNECTED = "isConnected";
+  static final String START_CALL = "startCallToAddress";
 
 
 
@@ -51,6 +53,10 @@ public class Bit6Plugin extends CordovaPlugin {
    }
    if (action.equals(CONVERSATION)) {
      getConversation(args.getString(0), callbackContext);
+     return true;
+   }
+   if (action.equals(START_CALL)) {
+     startCall(args.getString(0), args.getBoolean(1), callbackContext);
      return true;
    }
    if (action.equals(IS_CONNECTED)) {
@@ -77,6 +83,18 @@ public class Bit6Plugin extends CordovaPlugin {
     }
   });
 }
+
+ void startCall(String other, Boolean isVideo, final CallbackContext callbackContext) {
+
+  Address to = Address.parse(other);
+
+  //Address to = Address.parse("usr:john");
+  RtcDialog dialog = Bit6.getInstance().startCall(to, isVideo);
+  // Launch the default InCall activity
+  Context context= this.cordova.getActivity().getApplicationContext();
+  dialog.launchInCallActivity(context);
+}
+
 void getConversation(String other, final CallbackContext callbackContext){
   JSONArray messages = new JSONArray();
   Address address = Address.parse(other);
