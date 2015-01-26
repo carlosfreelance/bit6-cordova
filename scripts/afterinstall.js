@@ -1,11 +1,11 @@
-var fs = require('fs');
-var str = 'android.library.reference.2=../../plugins/com.bit6.sdk/lib/android/bit6-sdk\n';
+//This hook is used to properly package bit6 library (run ant release).
+//The build mechanism for cordova app does not pacakge R file with bit6 library.
+//This may be changed to a better solution later. 
 
-fs.open('platforms/android/project.properties', 'a', 666, function( e, id ) {
-  fs.write( id, str, null, 'utf8', function(){
-    console.log('Added reference to bit6-sdk in project.properties');
-    fs.close(id, function(){
-      console.log('afterinstall hook of com.bit6.sdk plugin has been successfully completed');
-    });
-  });
-});
+var sys = require('sys')
+var exec = require('child_process').exec;
+
+function puts(error, stdout, stderr) { sys.puts(stdout) }
+
+exec("cd platforms/android/com.bit6.sdk/bit6-sdk && ant release", puts);
+

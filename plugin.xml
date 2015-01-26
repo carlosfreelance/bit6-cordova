@@ -45,8 +45,9 @@ xmlns:android="http://schemas.android.com/apk/res/android">
   </platform>
 
   	<platform name="android">
+     <framework src="lib/android/bit6-sdk" custom="true" />
 
-    <hook type="after_plugin_install" src="scripts/afterinstall.js" />
+     <hook type="after_plugin_install" src="scripts/afterinstall.js" />
 
 
     <js-module name="Bit6" src="www/android/Bit6.js">
